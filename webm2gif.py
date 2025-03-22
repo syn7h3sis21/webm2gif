@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# coding=utf-8
 
-from moviepy.editor import *
+from moviepy import *
 import os
 import argparse
 
 
 def get_webm_list(file_dir):
-    L = []
+    webm_list = []
     for root, dirs, files in os.walk(file_dir):
         for file in files:
-            if os.path.splitext(file)[1] == '.webm':  
-                L.append(os.path.join(root, file))  
-        return L
+            if os.path.splitext(file)[1] == '.webm' or os.path.splitext(file)[1] == '.webp':
+                webm_list.append(os.path.join(root, file))
+        return webm_list
 
 
 def convert_file(file_in, file_out):
@@ -35,10 +35,12 @@ def convert_directory(file_in, file_out):
         return
     if not file_out:
         file_out = file_in
+    if not os.path.exists(file_out):
+        os.mkdir(file_out)
 
     webm_list = get_webm_list(file_in)
     for file_name in webm_list:
-        if '.webm' in file_name:
+        if '.webm' or '.webp' in file_name:
             clip = VideoFileClip(file_name)
             file_name = os.path.basename(file_name)
             clip.write_gif(file_out + '/' + os.path.splitext(file_name)[0]+'.gif')
@@ -46,13 +48,13 @@ def convert_directory(file_in, file_out):
 
 def run():
     parser = argparse.ArgumentParser(description='webm2gif')
-    parser.add_argument('--file_in', '-i', help='input .webm file or directory')
-    parser.add_argument('--file_out', '-o', help='output .gif file or directory, default: origin filename',
+    parser.add_argument('--file_in', '-i', help='Input .webm file or directory')
+    parser.add_argument('--file_out', '-o', help='Output .gif file or directory, default: origin filename',
                         default=None)
     args = parser.parse_args()
     file_in = args.file_in
     file_out = args.file_out
-    if '.webm' in file_in:
+    if '.webm' in file_in or '.webp' in file_in:
         convert_file(file_in, file_out)
     else:
         convert_directory(file_in, file_out)
