@@ -1,4 +1,4 @@
-一个将webm转为gif文件的小脚本
+一个将 WebM 转为 GIF 文件的小脚本
 
 依赖：`moviepy`
 
@@ -15,4 +15,3 @@ pip3 install moviepy
 # 批量
 ./webm2gif.py -i <in_directory> -o <output_directory>
 ```
-
